@@ -12,6 +12,17 @@ namespace Othello
 {
     public partial class TicBoard : UserControl
     {
+
+        int player = X;
+        int cX = 0, cY = 0;
+        const int X = 1;
+        const int O = 2;
+        int[,] board = new int[,] {
+            { 2,0,1 },
+            { 0,1,2 },
+            { 1,0,2 }
+        };
+
         public TicBoard()
         {
             InitializeComponent();
@@ -28,15 +39,11 @@ namespace Othello
         private void TicBoard_Load(object sender, EventArgs e)
         {
             resetBoard();
+            btnPlayerChange.Visible = playernum == 1;
+            playerLabel.Visible = playernum == 1;
         }
 
-        const int X = 1;
-        const int O = 2;
-        int[,] board = new int[,] { 
-            { 2,0,1 },
-            { 0,1,2 },
-            { 1,0,2 }
-        };
+        
         int boxSize = (int)Math.Ceiling(Convert.ToDecimal(510 / 3));
 
         public void drawBoard()
@@ -85,6 +92,12 @@ namespace Othello
         private void btnStart_Click(object sender, EventArgs e)
         {
             resetBoard();
+            delay.Enabled = playernum == 1 && player == O;
+            if(round==O)
+            {
+                changeTurn();
+            }
+            lblTurn.Text = $"{(round == O ? 'O' : 'X')}'s Turn";
         }
 
         private void resetBoard()
@@ -97,7 +110,7 @@ namespace Othello
             drawBoard();
         }
 
-        int round = O;
+        int round = X;
         private void pBoard_Click(object sender, EventArgs e)
         {
             
@@ -110,7 +123,7 @@ namespace Othello
                     {
                         string pname = (round == O) ? "O" : "X";
                         drawBoard();
-                        playerLabel.Text = $"{pname} Win";
+                        lblTurn.Text = $"{pname} Win";
                         return;
                     }
                     changeTurn();
@@ -148,38 +161,6 @@ namespace Othello
             return result;
         }
 
-        bool checkWin(int match)
-        {
-            bool result = false;
-
-            for (int i = 0; i < 3; i++)
-            {
-                int matchfound = 0;
-                for (int j = 0; j < 3; j++)
-                {
-                    if(board[i,j]==match)
-                    {
-                        matchfound++;
-                        if (matchfound == 3) return true;
-                    }
-                }
-            }
-            for (int i = 0; i < 3; i++)
-            {
-                int matchfound = 0;
-                for (int j = 0; j < 3; j++)
-                {
-                    if (board[j,i] == match)
-                    {
-                        matchfound++;
-                        if (matchfound == 3) return true;
-                    }
-                }
-            }
-
-            return result;
-        }
-
         void changeTurn()
         {
             round = (round == X) ? O : X;
@@ -187,8 +168,7 @@ namespace Othello
             lblTurn.Text = $"{pname}'s turn";
         }
 
-        int player = O;
-        int cX = 0, cY = 0;
+        
 
         private void btnPlayerChange_Click(object sender, EventArgs e)
         {
@@ -203,6 +183,8 @@ namespace Othello
                 string pname = (player == O) ? "O" : "X";
                 playerLabel.Text = $"{pname}'s turn";
             }
+            resetBoard();
+            delay.Enabled = player == O;
         }
 
         private void delay_Tick(object sender, EventArgs e)
@@ -223,7 +205,6 @@ namespace Othello
                     board[x,y] = round;
                     drawBoard();
                     changeTurn();
-                    playerLabel.Text = "Your turn";
                     delay.Enabled = false;
                 }
             }

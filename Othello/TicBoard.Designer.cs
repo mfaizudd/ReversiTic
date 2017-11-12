@@ -58,9 +58,9 @@
             this.lblTurn.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
             this.lblTurn.Location = new System.Drawing.Point(526, 12);
             this.lblTurn.Name = "lblTurn";
-            this.lblTurn.Size = new System.Drawing.Size(64, 20);
+            this.lblTurn.Size = new System.Drawing.Size(63, 20);
             this.lblTurn.TabIndex = 10;
-            this.lblTurn.Text = "O\'s turn";
+            this.lblTurn.Text = "X\'s turn";
             // 
             // btnStart
             // 
@@ -107,9 +107,10 @@
             this.playerLabel.Font = new System.Drawing.Font("Segoe UI", 9F);
             this.playerLabel.Location = new System.Drawing.Point(526, 163);
             this.playerLabel.Name = "playerLabel";
-            this.playerLabel.Size = new System.Drawing.Size(82, 15);
+            this.playerLabel.Size = new System.Drawing.Size(80, 15);
             this.playerLabel.TabIndex = 13;
-            this.playerLabel.Text = "You play as O!";
+            this.playerLabel.Text = "You play as X!";
+            this.playerLabel.Visible = false;
             // 
             // btnBack
             // 
