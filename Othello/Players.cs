@@ -41,6 +41,7 @@ namespace Othello
                     break;
                 case "tictactoe":
                     if (tb.IsDisposed) tb = new TicBoard();
+                    tb.playernum = 2;
                     Support.adduc(tb, Parent, this);
                     ((MainForm)Parent.Parent).label1.Text = "Playing Multiplayer Tic Tac Toe";
                     break;
@@ -73,6 +74,11 @@ namespace Othello
         private void Players_Load(object sender, EventArgs e)
         {
             tableLayoutPanel1.Top = Convert.ToInt32(Math.Floor(Convert.ToDecimal(Height / 2))-Math.Floor(Convert.ToDecimal(tableLayoutPanel1.Height/2)));
+        }
+
+        private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }

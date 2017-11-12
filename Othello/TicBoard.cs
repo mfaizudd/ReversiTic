@@ -17,6 +17,14 @@ namespace Othello
             InitializeComponent();
         }
 
+        public TicBoard(int players)
+        {
+            InitializeComponent();
+            playernum = players;
+        }
+
+        public int playernum = 1;
+
         private void TicBoard_Load(object sender, EventArgs e)
         {
             resetBoard();
@@ -89,28 +97,53 @@ namespace Othello
             drawBoard();
         }
 
-        int round = X;
+        int round = O;
         private void pBoard_Click(object sender, EventArgs e)
         {
-            if(board[cX,cY]==0)
+            
+            if (board[cX,cY]==0)
             {
-                board[cX, cY] = round;
-                if(checkWin()==true)
+                if(!delay.Enabled && !checkWin())
                 {
-                    string pname = (round == O) ? "O" : "X";
-
-                    playerLabel.Text = $"{pname} Win";
+                    board[cX, cY] = round;
+                    if (checkWin())
+                    {
+                        string pname = (round == O) ? "O" : "X";
+                        drawBoard();
+                        playerLabel.Text = $"{pname} Win";
+                        return;
+                    }
+                    changeTurn();
+                    drawBoard();
+                    if(playernum==1) delay.Enabled = true;
                 }
-                changeTurn();
-                drawBoard();
             }
         }
 
         bool checkWin()
         {
             bool result = false;
+            int a = board[0, 0];
+            int b = board[0, 1];
+            int c = board[0, 2];
+            int d = board[1, 0];
+            int e = board[1, 1];
+            int f = board[1, 2];
+            int g = board[2, 0];
+            int h = board[2, 1];
+            int i = board[2, 2];
 
-            playerLabel.Text = $"{round} win";
+            if (a == b && b == c && a>0) result = true;
+            else if (d == e && e == f && d>0) result = true;
+            else if (g == h && h == i && g>0) result = true;
+
+            else if (a == d && d == g && a>0) result = true;
+            else if (b == e && e == h && b>0) result = true;
+            else if (c == f && f == i && c>0) result = true;
+
+            else if (a == e && e == i && a>0) result = true;
+            else if (c == e && e == g && c>0) result = true;
+            else result = false;
 
             return result;
         }
@@ -150,13 +183,64 @@ namespace Othello
         void changeTurn()
         {
             round = (round == X) ? O : X;
+            String pname = (round == X) ? "X" : "O";
+            lblTurn.Text = $"{pname}'s turn";
         }
 
+        int player = O;
         int cX = 0, cY = 0;
+
+        private void btnPlayerChange_Click(object sender, EventArgs e)
+        {
+            if(playernum==1)
+            {
+                player = (player == O) ? X : O;
+                string pname = (player == O) ? "O" : "X";
+                playerLabel.Text = $"You play as {pname}";
+            }
+            else
+            {
+                string pname = (player == O) ? "O" : "X";
+                playerLabel.Text = $"{pname}'s turn";
+            }
+        }
+
+        private void delay_Tick(object sender, EventArgs e)
+        {
+            if(playernum==1)
+            {
+                if (round != player)
+                {
+                    Random r = new Random();
+                    int x = r.Next(0, 3);
+                    int y = r.Next(0, 3);
+                    while(board[x,y]>0)
+                    {
+                        x = r.Next(0, 3);
+                        y = r.Next(0, 3);
+                        Console.WriteLine($"{x},{y}");
+                    }
+                    board[x,y] = round;
+                    drawBoard();
+                    changeTurn();
+                    playerLabel.Text = "Your turn";
+                    delay.Enabled = false;
+                }
+            }
+        }
+
         private void pBoard_MouseMove(object sender, MouseEventArgs e)
         {
             cX = Convert.ToInt32(Math.Floor(Convert.ToDecimal(e.Y / 170)));
             cY = Convert.ToInt32(Math.Floor(Convert.ToDecimal(e.X / 170)));
+            if(!delay.Enabled)
+            {
+                pBoard.Cursor = Cursors.Hand;
+            }
+            else
+            {
+                pBoard.Cursor = Cursors.Default;
+            }
         }
     }
 }
